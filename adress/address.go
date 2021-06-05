@@ -24,12 +24,20 @@ func (wall Wallet) Read(b []byte) (int, error) {
 }
 func (wall *Wallet) Genwallet(db *sql.DB) {
 	wall.privatekey, _ = ecdsa.GenerateKey(elliptic.P224(), wall)
-	fmt.Println(wall.privatekey.X)
-	statement, err := db.Prepare("INSERT INTO WALLET (privatekey,publickey) VALUES (?,?)")
-	statement.Exec(fmt.Sprintf("%x", wall.privatekey.D), fmt.Sprintf("%x", wall.privatekey.PublicKey.X))
 
+	err := addwallet(wall.privatekey.D.String(), wall.privatekey.X.String(), wall.privatekey.Y.String(), db)
 	if err != nil {
-		fmt.Println("there is an error")
+		println(err)
 	}
+	listwallet(db)
+}
 
+func (wall *Wallet) Listwallet(db *sql.DB) {
+	wal, err := listwallet(db)
+	if err != nil {
+		fmt.Println("Erro")
+	}
+	for i, j := range wal {
+		fmt.Printf("%d Public-Key : %x \n", i, j.privatekey.D)
+	}
 }

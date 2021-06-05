@@ -11,14 +11,14 @@ import (
 func main() {
 	db, err := sql.Open("sqlite3", "./foo.db")
 	checkErr(err)
-	statement, err := db.Prepare("CREATE TABLE IF NOT EXISTS WALLET (id INTEGER PRIMARY KEY, privatekey TEXT,publickey TEXT)")
+	statement, err := db.Prepare("CREATE TABLE IF NOT EXISTS WALLET (id INTEGER PRIMARY KEY, privatekey TEXT,publickeyX TEXT,publickeyY TEXT)")
 	checkErr(err)
 	statement.Exec()
 
 	var a adress.Wallet
 
 	a.Genwallet(db)
-	a.PrintPriv()
+	a.Listwallet(db)
 
 }
 
